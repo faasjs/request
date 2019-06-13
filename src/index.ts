@@ -4,7 +4,7 @@ import { stringify } from 'querystring';
 import * as URL from 'url';
 import Logger from '@faasjs/logger';
 
-const log = new Logger('faasjs.request');
+const log = new Logger('request');
 
 /**
  * 发起网络请求
@@ -85,9 +85,9 @@ export default function request (url: string, {
     }
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise(function (resolve, reject) {
     // 包裹请求
-    const req = protocol.request(options, (res) => {
+    const req = protocol.request(options, function (res) {
       const raw: Buffer[] = [];
       res.on('data', (chunk) => {
         raw.push(chunk);
@@ -107,11 +107,11 @@ export default function request (url: string, {
           if (response.statusCode >= 200 && response.statusCode < 400) {
             resolve(response);
           } else {
-            log.debug('response.error', response);
+            log.debug('response.error %o', response);
             reject(response);
           }
         } catch (e) {
-          log.error('response.error', e);
+          log.error('response.error %o', e);
           reject(response);
         }
       });
@@ -121,8 +121,8 @@ export default function request (url: string, {
       req.write(body);
     }
 
-    req.on('error', (e) => {
-      log.error('response.error', e);
+    req.on('error', function (e) {
+      log.timeEnd(url, 'response.error %o', e);
       reject(e);
     });
 
