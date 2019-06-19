@@ -58,12 +58,14 @@ export default function request (url: string, {
     query: http.OutgoingHttpHeaders;
     host: string;
     path: string;
+    port: string;
   } = {
     headers: {},
     host: uri.host!,
     method: method ? method.toUpperCase() : 'GET',
     path: uri.path!,
     query: {},
+    port: uri.port!
   };
 
   // 处理 headers
