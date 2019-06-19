@@ -61,7 +61,7 @@ export default function request (url: string, {
     port: string;
   } = {
     headers: {},
-    host: uri.host!,
+    host: uri.host!.replace(/:[0-9]+$/, ''),
     method: method ? method.toUpperCase() : 'GET',
     path: uri.path!,
     query: {},
