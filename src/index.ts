@@ -26,7 +26,7 @@ export default function request (url: string, {
   headers?: http.OutgoingHttpHeaders;
   method?: string;
   query?: http.OutgoingHttpHeaders;
-  body?: http.OutgoingHttpHeaders | string;
+  body?: any;
 } = {
   headers: {},
   query: {},
@@ -85,6 +85,10 @@ export default function request (url: string, {
     } else {
       body = JSON.stringify(body);
     }
+  }
+
+  if (body && !options.headers['Content-Length']) {
+    options.headers['Content-Length'] = Buffer.byteLength(body);
   }
 
   return new Promise(function (resolve, reject) {
