@@ -127,9 +127,10 @@ export default function request (url: string, {
         response.headers = res.headers;
         response.body = data;
 
-        if (response.body && response.headers['Content-Type'] && response.headers['Content-Type'].includes('application/json')) {
+        if (response.body && response.headers['content-type'] && response.headers['content-type'].includes('application/json')) {
           try {
             response.body = JSON.parse(response.body);
+            log.debug('response.parse JSON');
           } catch (error) {
             console.error(error);
           }
