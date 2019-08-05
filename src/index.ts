@@ -6,6 +6,21 @@ import Logger from '@faasjs/logger';
 
 const log = new Logger('request');
 
+export interface Request{
+  headers?: http.OutgoingHttpHeaders;
+  method?: string;
+  query?: http.OutgoingHttpHeaders;
+  body?: any;
+}
+
+export interface Response{
+  request: Request;
+  statusCode?: number;
+  statusMessage?: string;
+  headers: http.OutgoingHttpHeaders;
+  body: any;
+}
+
 /**
  * 发起网络请求
  * @param {string} url 请求路径或完整网址
@@ -22,15 +37,10 @@ export default function request (url: string, {
   method,
   query,
   body,
-}: {
-  headers?: http.OutgoingHttpHeaders;
-  method?: string;
-  query?: http.OutgoingHttpHeaders;
-  body?: any;
-} = {
+}: Request = {
   headers: {},
   query: {},
-}): Promise<any> {
+}): Promise<Response> {
   log.debug('request %s %o', url, {
     body,
     headers,
@@ -106,6 +116,7 @@ export default function request (url: string, {
         response.request = options;
         response.request.body = body;
         response.statusCode = res.statusCode;
+        response.statusMessage = res.statusMessage;
         response.headers = res.headers;
         response.body = data;
 

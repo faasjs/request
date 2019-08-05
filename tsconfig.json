@@ -6,14 +6,12 @@
         "types/*"
       ]
     },
-    "target": "es2017",
-    "module": "commonjs",
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
     "declaration": true,
     "outDir": "./lib",
-    "strict": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": false
+    "strict": true
   },
   "include": [
     "**/*.ts"
