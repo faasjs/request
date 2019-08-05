@@ -6,14 +6,16 @@ import Logger from '@faasjs/logger';
 
 const log = new Logger('request');
 
-export interface Request{
+export interface Request {
   headers?: http.OutgoingHttpHeaders;
   method?: string;
+  host?: string;
+  path?: string;
   query?: http.OutgoingHttpHeaders;
   body?: any;
 }
 
-export interface Response{
+export interface Response {
   request: Request;
   statusCode?: number;
   statusMessage?: string;
@@ -37,7 +39,12 @@ export default function request (url: string, {
   method,
   query,
   body,
-}: Request = {
+}: {
+  headers?: http.OutgoingHttpHeaders;
+  method?: string;
+  query?: http.OutgoingHttpHeaders;
+  body?: any;
+} = {
   headers: {},
   query: {},
 }): Promise<Response> {
@@ -120,15 +127,18 @@ export default function request (url: string, {
         response.headers = res.headers;
         response.body = data;
 
-        try {
-          if (response.statusCode >= 200 && response.statusCode < 400) {
-            resolve(response);
-          } else {
-            log.debug('response.error %o', response);
-            reject(response);
+        if (response.body && response.headers['Content-Type'] && response.headers['Content-Type'].includes('application/json')) {
+          try {
+            response.body = JSON.parse(response.body);
+          } catch (error) {
+            console.error(error);
           }
-        } catch (e) {
-          log.error('response.error %o', e);
+        }
+
+        if (response.statusCode >= 200 && response.statusCode < 400) {
+          resolve(response);
+        } else {
+          log.debug('response.error %o', response);
           reject(response);
         }
       });
