@@ -16,11 +16,30 @@ export interface Request {
 }
 
 export interface Response {
-  request: Request;
+  request?: Request;
   statusCode?: number;
   statusMessage?: string;
   headers: http.OutgoingHttpHeaders;
   body: any;
+}
+
+export interface RequestOptions {
+  headers?: http.OutgoingHttpHeaders;
+  method?: string;
+  query?: http.OutgoingHttpHeaders;
+  body?: any;
+}
+
+type Mock = (url: string, options: RequestOptions) => Promise<Response>;
+
+let mock: Mock | null = null;
+
+/**
+ * 设置模拟请求
+ * @param handler {function | null} 模拟函数，若设置为 null 则表示清除模拟函数
+ */
+export function setMock (handler: Mock | null) {
+  mock = handler;
 }
 
 /**
@@ -39,12 +58,7 @@ export default function request (url: string, {
   method,
   query,
   body,
-}: {
-  headers?: http.OutgoingHttpHeaders;
-  method?: string;
-  query?: http.OutgoingHttpHeaders;
-  body?: any;
-} = {
+}: RequestOptions = {
   headers: {},
   query: {},
 }): Promise<Response> {
@@ -54,6 +68,15 @@ export default function request (url: string, {
     method,
     query,
   });
+
+  if (mock) {
+    return mock(url, {
+      headers,
+      method,
+      query,
+      body
+    });
+  }
 
   // 序列化 query
   if (query) {
@@ -69,16 +92,18 @@ export default function request (url: string, {
   const uri = URL.parse(url);
   const protocol = uri.protocol === 'https:' ? https : http;
 
+  if (!uri.protocol) throw Error('Unkonw protocol');
+
   const options: {
     method: string;
     headers: http.OutgoingHttpHeaders;
     query: http.OutgoingHttpHeaders;
-    host: string;
+    host?: string;
     path: string;
     port: string;
   } = {
     headers: {},
-    host: uri.host!.replace(/:[0-9]+$/, ''),
+    host: uri.host ? uri.host.replace(/:[0-9]+$/, '') : uri.host,
     method: method ? method.toUpperCase() : 'GET',
     path: uri.path!,
     query: {},

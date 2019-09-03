@@ -18,7 +18,7 @@ describe('request', function () {
 
       expect(res.statusCode).toEqual(200);
       expect(res.request.path).toEqual('/?test=1');
-      expect(res.body).toContain('MissingParameter');
+      expect(res.body.Response.Error.Code).toEqual('MissingParameter');
     });
 
     test('with ?', async () => {
@@ -30,7 +30,7 @@ describe('request', function () {
 
       expect(res.statusCode).toEqual(200);
       expect(res.request.path).toEqual('/?a=1&test=1');
-      expect(res.body).toContain('MissingParameter');
+      expect(res.body.Response.Error.Code).toEqual('MissingParameter');
     });
   });
 
@@ -44,7 +44,7 @@ describe('request', function () {
 
       expect(res.statusCode).toEqual(200);
       expect(res.request.headers['X-HEADER']).toEqual('VALUE');
-      expect(res.body).toContain('MissingParameter');
+      expect(res.body.Response.Error.Code).toEqual('MissingParameter');
     });
 
     test('without value', async () => {
@@ -56,7 +56,7 @@ describe('request', function () {
 
       expect(res.statusCode).toEqual(200);
       expect(res.request.headers['X-HEADER']).toBeUndefined();
-      expect(res.body).toContain('MissingParameter');
+      expect(res.body.Response.Error.Code).toEqual('MissingParameter');
     });
   });
 
@@ -74,7 +74,7 @@ describe('request', function () {
 
       expect(res.statusCode).toEqual(200);
       expect(res.request.body).toEqual('test=1');
-      expect(res.body).toContain('MissingParameter');
+      expect(res.body.Response.Error.Code).toEqual('MissingParameter');
     });
 
     test('json', async () => {
@@ -87,7 +87,7 @@ describe('request', function () {
 
       expect(res.statusCode).toEqual(200);
       expect(res.request.body).toEqual('{"test":1}');
-      expect(res.body).toContain('InvalidParameter');
+      expect(res.body.Response.Error.Code).toEqual('InvalidParameter');
     });
   });
 });

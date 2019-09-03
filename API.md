@@ -1,3 +1,25 @@
+## Functions
+
+<dl>
+<dt><a href="#setMock">setMock(handler)</a></dt>
+<dd><p>设置模拟请求</p>
+</dd>
+<dt><a href="#request">request(url, [options])</a> ⇒ <code>promise</code></dt>
+<dd><p>发起网络请求</p>
+</dd>
+</dl>
+
+<a name="setMock"></a>
+
+## setMock(handler)
+设置模拟请求
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| handler | <code>function</code> \| <code>null</code> | 模拟函数，若设置为 null 则表示清除模拟函数 |
+
 <a name="request"></a>
 
 ## request(url, [options]) ⇒ <code>promise</code>
